@@ -1,0 +1,550 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap');
+
+*, *::before, *::after { /* Прописываем стиль для правильного расчета внутренних отступов блоков и во избежание неправильных размеров, созданных браузером (Если мы задали блоку ширину 400рх, добавили внутренние отступы справа и слева по 20рх, блок будет уже не 400рх в ширину, а 440рх, поэтому пишем это правило) */
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px; /* основные текста будут 15рх */
+}
+
+h1, h2, h3, h4, h5, h6 { /* По умолчанию, у всех заголовков есть отступы, в большинстве случаев их убирают */
+    margin: 0;
+}
+
+p {
+    margin: 0 0 5px; /* так же убираем практически все отступы у параграфов */
+}
+
+.container { /* контейнер или же сетка, - внутренний контент, который всегда остается неизменным, и, если экран монитора имеет другие характеристики, меняется размер родительского блока, а контейнер (сетка) с определенной, установленной шириной должен оставаться по центру экрана, для этого создается контейнер */
+    max-width: 1230px; /*  */
+    width: 100%;
+    padding: 15px; /* При уменьшении экрана, блоки не будут прижиматься к сторонам, а будут небольшие отступы (адаптив) */
+    margin: 0 auto; /* центровка по горизонтали */
+}
+
+.btn {
+    min-width: 200px; /* На сайте две кнопки, с разным текстом внутри, но одинаковой шириной. Поэтому ставим ограничение минимальной ширины в 200рх (не путать с просто width 200px). Текст кнопки может меняться, поэтому мы ставим ограничение, а не точную ширину, плюс паддинги всегда сохраняются */
+    height: 50px; 
+    padding: 0 15px; /* Делаем отступы слева и справа в 15рх, для того, чтобы текст никогда не прижимался к бокам */
+    display: inline-flex; /* ссылки <a> - inline элементы (строчные), нам нужно здесь сделать ее блочным элементом (inline-flex либо inline-box (тогда они имеют свойства и того, и того вида элемента)) */
+    align-items: center; /* Выравнивание по вертикали */
+    justify-content: center; /* Выравнивание по горизонтали */
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    background-color: #DB2512;
+    transition: background-color .2s ease; /* меняем цвет фона с текущего на активный при наведении (:hover) */
+    cursor: pointer; /* У тега а по умолчанию таких стилей нет, поэтому для button можно добавить их прямо сюда - курсор меняем как при наведении на ссылку, убираем все границы */
+    outline: 0;
+    border: 0;
+}
+
+.btn:hover {
+    background-color: #B2190B;
+}
+
+/* ----- Header start ----- */
+
+.header {
+    width: 100%; 
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3; /* Из-за того, что оверлей закрыл шапку, ставим ей более важный индекс поо оси z (по умолчанию у всех элементов этот индекс равен 1, последующие числа важнее предыдущих) */
+}
+
+.header__wrapper {
+    height: 100px; /* задаем высоту блока */
+    display: flex; /*флексовая сетка */ 
+    align-items: center; /* выравнивание по вертикали */
+    justify-content: space-between; /* все элементы разъезжаются по сторонам */
+}
+
+.header__block {
+    width: 20%;   /* теперь nav по центру */ 
+}
+
+.header__logo {
+    display: inline-block;
+}
+
+.header__logo img {
+    height: 65px; /* ограничение картинки лого по высоте. Если придется менять изображение, картинка не будет больше 65рх и не растянется */
+}
+
+.nav {
+    display: flex;
+}
+
+.nav__link {
+    margin-right: 35px; /* отступы между ссылками в навигации, начиная с первой (в последней потом уберем отступы справа) */
+
+    color: #fff;
+    text-transform: uppercase; /* все буквы большие */
+    text-decoration: none; /* убираются подчеркивания на ссылках */
+    font-weight: 600;
+    position: relative; /* указываем для дочернего элемента (absolute) родительский, чтобы он понимал, относительно какого элемента он должен появиться */
+}
+
+.nav__link::after {
+    width: 100%; /* на всю ширину после родительского (relative) элемента */
+    height: 2px;
+    background-color: #fff;
+    position: absolute;
+    top: 100%; /* указываем для того, чтобы декорация была снизу родительского элемента (без топа будет сверху род. элемента) */
+    left: 0; /* начинается с самого ачала - с левого края, без  каких-либо отступов */
+    content: "";  /* Для псевдоэлементов (элементов с ::after и ::before) обязательно прописываем content, можно оставить пустые кавычки */
+    opacity: 0; /* видимость элемента - насколько виден элемент (0 не виден, 1 виден полностью, 0.5 наполовину). Для всех ссылок изначально сделаем opacity 0, затем для активной сделаем 1 */
+    transition: opacity .2s ease; /* меняем текущий opacity (0) на активный при наведении (1) за 200 мс (0.2 с) используя переход (тип анимации) ease */
+}
+
+.nav__link:last-child { /* выбираем последний элемент класса и удаляем его отступы справа */
+    margin-right: 0;
+}
+
+.nav__link:hover::after { /* добавляем пользовательский эффект, при наведении на неактивную ссылку также появляется линия снизу элемента */
+    opacity: 1;
+}
+
+.nav__link.active::after {
+    opacity: 1; /* для активной ссылки пишем opacity 1 */
+}
+
+.header__lng {
+    display: flex;
+    justify-content: flex-end; /* то же самое, что и text-align: right; только для флекса */ 
+}
+
+.header__lng-link {
+    margin-right: 8px;
+    font-weight: 600;
+    color: #B7B7B7;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color .2s ease; /* менятся свет ссылки (ru) на белый при наведении курсора */ 
+}
+
+.header__lng-link:last-child {
+    margin-right: 0;
+}
+
+.header__lng-link:hover {
+    color: #fff;
+}
+
+.header__lng-link.active { /* для активной ссылки делаем белый цвет */
+    color: #fff;
+}
+
+/* ----- Header end ----- */
+
+
+/* ----- Intro start ----- */ 
+
+.intro { 
+    background-repeat: no-repeat; /* Чтобы картинка не повторялась на более широких мониторах, прописываем no-repeat */
+    background-size: cover; /* Картинка заполняет весь блок. Растягивается при увеличении размеров экрана */
+    position: relative; /* Родительский элемент для .intro::after */
+}
+
+.intro::after { /* Создаем оверлей под основным изображением, который затемним для большей читаемости белого текста */
+    width: 100%;
+    height: 100%;
+
+    position: absolute; /* Дочерний элемент для .intro */
+    top: 0;
+    left: 0;
+
+    background-color: #000;
+    opacity: .2;
+    content: "";
+}
+
+.intro__content {
+    /* height: 100vh; /* можно сделать так, чтобы изображение было на всю высоту экрана, независимо от его размеров. Проценты (100%) здесь не сработают как надо */
+    height: 750px; /* Делаем, как в дизайне */
+    display: flex;
+    align-items: center; /* Выравнивание по вертикали для флекса */
+    position: relative;
+    z-index: 2; /* Из-за оверлея пропало взаимодействие с кнопкой, ставим индекс равный 2 */
+}
+
+/* .intro__block {
+
+} */
+
+.intro__title {
+    max-width: 790px; /* Создаем ограничение для блока текста. Не width: 790px */ 
+    margin-bottom: 30px; /* Делаем отступ внизу от текста, перед кнопкой. На сайте кроме основного отступа есть внутренний отступ текста (примерно 17рх), чтобы его учесть, пишем не 50рх, а например 30рх */
+    font-size: 48px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.5; /* то же самое, что "line-height: 150%;" */
+    text-transform: uppercase;
+}
+
+/* ----- Intro end ----- */ 
+
+.section {
+    margin-bottom: 100px;
+}
+
+.section.process {
+    padding-top: 50px; /* Теперь есть отступ вниз у каждой секции на 100рх, но так как на дизайне на секции процесса отступ сверху не 100, а 150рх, добавляем сюда 50рх padding */
+}
+
+/* ----- Info start ----- */ 
+
+.info {
+    transform: translateY(-50%); /* Свойство переносит объект по оси Y (в данном случае на высоту равную половине его высоты) */
+}
+
+.info__item {
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.25); /* Скопированный код тени из фигмы */
+    padding: 40px 40px 30px;
+}
+
+.info__img {
+    margin-bottom: 20px;
+}
+
+.info__img img {
+    height: 30px;
+}
+
+.info__title {
+    margin-bottom: 10px;
+    font-size: 18px;
+    letter-spacing: 0.15em; /* Скопированный из фигмы код для пробела между буквами */
+    text-transform: uppercase;
+}
+
+.info__text {
+    font-size: 18px;
+    color: #B7B7B7;
+}
+
+/* ----- Info end ----- */ 
+
+
+/* ----- Block start ----- */ 
+
+.block__title {
+    margin-bottom: 15px;
+    font-size: 30px;
+    letter-spacing: 0.15em; /* Скопированный из фигмы код для пробела между буквами */
+    text-transform: uppercase;
+}
+
+.block__title.text-white {
+    color: #fff;
+}
+
+.block__link {
+    letter-spacing: 0.15em; 
+    color: #000;
+    margin-bottom: 60px;
+    display: inline-block; /* чтобы у ссылки работали margin, padding и тд, нужно сделать ее блочным элементом. Но если просто написать display: block;, ссылка растянется на всю ширину экрана, и на ссылку можно будет нажать, даже не наводя на нее курсор. Поэтому, чтобы она не занимала всю ширину, но пэддинги и тд работали, пишем inline-block (либо inline-flex) */
+    text-transform: uppercase;
+}
+
+.block__link:hover {
+    text-decoration: none;
+}
+
+.wrapper {
+    display: flex;
+    margin: 0 -10px;   /* для всех рапперов на странице сделаем общую структуру, которая в каждом из них будет дополняться своими характеристиками */
+} 
+
+.block {
+    width: 33.33%; /* треть ширины обертки (wrapper) */
+    padding: 0 10px;  /* то же самое для блоков */
+}
+
+.text-upper {
+    text-transform: uppercase;
+}
+
+/* ----- Block end ----- */ 
+
+
+/* ----- Services start ----- */ 
+
+.services__item {
+    text-decoration: none;
+}
+
+.services__item:hover .services__content-item {
+    opacity: 1;
+}
+
+.services__item:hover .services__content::after {
+    opacity: .7;
+}
+
+.services__content {
+    height: 500px;
+    margin-bottom: 20px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative; 
+}
+
+.services__content::after { /* Оверлэй для блочной ссылки */
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: 0; /* Пока что его не видно, но при наведении он станет заметным */
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    transition: opacity .2s ease;
+}
+
+.services__content-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 2;
+    transition: opacity .2s ease;
+}
+
+.services__img {
+    width: 100px; /* скопированные из фигмы размеры круга */
+    height: 100px;
+    background-color: #BB2512;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute; /* Размещаем изображение (плюс) ровно по середине родительского блока (ссылки с изображением) */
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); /* 1. -50% по оси X, 2. -50% по оси Y */
+}
+
+.services__title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.23em; /* Скопированный из фигмы код для пробела между буквами */
+    color: #000;
+    text-transform: uppercase;
+}
+
+.services__text {
+    max-width: 270px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.23em;
+    position: absolute;
+    left: 30px;
+    bottom: 30px;
+    text-transform: uppercase;
+}
+
+/* ----- Services end ----- */ 
+
+
+/* ----- About start ----- */ 
+
+.about {
+    padding: 115px 0; /* Сверху, снизу по 115рх, слева и справа - по нулю */
+    background-color: #171616; /* фон секции расстянут на всю ширину страницы, так как секция about находится вне (над) контейнера, а значит, на нее не распространяется его написанная ширина */
+}
+
+.about__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.about__block {
+    max-width: 505px;
+}
+
+.about__text {
+    margin: 35px 0 40px; /* сверху 35, слева-справа 0 и снизу 40 */
+    font-weight: 600; /* прописываем только font-weight, так как font-size, равный 15 (и как у данного текста на дизайне), прописан вначале в body как стандартный */
+    color: #B7B7B7;
+    letter-spacing: 0.23em;
+}
+
+.about__link {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.about__link:hover {
+    text-decoration: none;
+}
+
+.about__img {
+    height: 340px;
+}
+
+/* ----- About end ----- */ 
+
+
+/* ----- Process start ----- */ 
+
+.process__title {
+    margin-bottom: 50px;
+    font-size: 148px;
+    font-weight: 900; /* Вся информация берется из секции Inspect в фигме */
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1; /* Высота строки 100%, чтобы сжать блок */
+}
+
+.process__subtitle {
+    margin-bottom: 90px;
+    font-size: 40px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    text-align: center;
+}
+
+.process__item {
+    padding: 30px 30px 15px;
+    height: 100%; /* Все блоки с таким классом будут выравниваться по высотепо самому большому из блоков. Если в каком-то блоке будет больше контента. и его высота также будет больше, остальные блоки тоже расстянутся и будут выглядеть всегда одинаково по высоте */
+    min-height: 150px;
+    background: #ffffff; /* Скопировано из фигмы */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.25); /* Скопировано из фигмы */
+}
+
+/* ----- Process end ----- */ 
+
+
+/* ----- Contacts start ----- */ 
+
+.contacts {
+    padding: 100px 0;
+    background-color: #171616;
+}
+
+.contacts .block__title {
+    margin-bottom: 40px;
+}
+
+.contacts__form {
+    max-width: 440px; /* По дизайну, для формы нужно поставить ограничение по ширине */
+}
+
+.form__row {
+    display: flex;
+    margin: 0 -20px;
+}
+
+.form__group {
+    margin-bottom: 30px;
+    padding: 0 20px;
+    flex: 1; /* Означает, что группа будет занимаеть все свободное пространство по ширине. Если в одном form__row находятся например два form__group (как в нашем случае), то каждый form__row автоматически будет занимать 50 ширины */
+    position: relative;
+}
+
+.input {
+    width: 100%;
+    padding: 9px 0;
+    outline: 0; /* outline - граница по умолчанию при нажатии на поле (появляется вне основной границы) - в данном случае убрано */
+    border: 0; /* Убираем основную границу и ниже оставляем только нижнюю границу */
+    color: #fff;
+    font-family: inherit; /* Берет значение от родителя (в данном случае - 'Poppins', sans-serif). Так же работает с цветом, с font-size и тд */
+    font-size: 15px;
+    border-bottom: 1px solid #fff; /* 1px - толщина границы (как на дизайне), solid - тип границы (сплошной) и цвет */
+    background-color: transparent;
+}
+
+.input:focus + .label {
+    transform: translateY(-15px); 
+    font-size: 12px;
+} /* Это не сработало бы, если бы в index.html лэйбл будет стоять перед инпутом, а не после него. Через css мы можем обратиться только к следующему элементу, находящемуся рядом (+) (если в таком случае будет что-то между инпутом и лэйблом, опять же ничего не сработает) */
+
+.input:not(:placeholder-shown) + .label {
+    transform: translateY(-15px);  /* Чтобы лэйбл при нажатии уезжал наверх и, при написании какого-либо текста, не съезжал обратно, пишем данную конструкцию, а в тело копируем то же самое, что было в input:focus + .label */
+    font-size: 12px;
+}
+
+.label {
+    letter-spacing: 0.15em; /* Скопировано из фигмы */
+    color: #fff;
+    position: absolute;
+    top: 10px;
+    left: 20px; /* Из-за пэддингов на form__group текст лэйбла уезжает на 20рх влево. Поэтому, чтобы выровнять лэйбл с нижней границей, пишем вместо 0 20рх */
+    pointer-events: none; /* Чтобы лэйблы пропускали через себя клик (либо можно обойтись без этого и просто в index.html в атрибуте for лэйбла написать айди инпута, сработает так же) */
+    transition: all .2s ease;
+}
+
+.textarea {
+    min-height: 130px;
+    width: 100%;
+    padding: 9px 0;
+    resize: vertical; /* Теперь менять размер можно только по вертикали (по умолчанию можно изменять и высоту, и ширину) */
+    outline: 0; 
+    border: 0; 
+    color: #fff;
+    font-family: inherit; 
+    font-size: 15px;
+    border-bottom: 1px solid #fff; 
+    background-color: transparent;
+}
+
+.textarea:focus + .label {
+    transform: translateY(-15px); 
+    font-size: 12px;
+}
+
+.textarea:not(:placeholder-shown) + .label {
+    transform: translateY(-15px);
+    font-size: 12px;
+}
+
+/* ----- Contacts end ----- */ 
+
+
+/* ----- Footer start ----- */ 
+
+.footer__wrapper {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.copyright {
+    letter-spacing: 0.15em; /* Скопировано из фигмы */
+}
+
+.footer__soc {
+    display: flex;
+}
+
+.footer__soc-link {
+    margin-right: 20px;
+    text-decoration: none; /* Хоть подчеркивание не всегда и видно, в некоторых браузерах оно все еще есть, поэтому с ссылки его нужно обязательно убрать */
+}
+
+.footer__soc-link:last-child {
+    margin-right: 0;
+}
+
+.footer__soc-link img {
+    height: 25px;
+}
+
+/* ----- Footer end ----- */ 
